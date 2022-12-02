@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:args/args.dart';
 import 'package:day_1/day_1.dart';
 
@@ -17,4 +19,8 @@ Future<void> main(List<String> arguments) async {
   final topElfCalories = getTopElfCalories(elves);
 
   print('Top Elf Calories: $topElfCalories');
+
+  getTopThreeElfCalories(elves);
+
+  exit(1);
 }

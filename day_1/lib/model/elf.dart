@@ -31,4 +31,8 @@ class Elf extends Equatable implements Comparable<Elf> {
 
     return thisCalories.compareTo(otherCalories);
   }
+
+  int operator +(Elf other) {
+    return getCalories() + other.getCalories();
+  }
 }
