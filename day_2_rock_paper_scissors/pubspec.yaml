@@ -1,13 +1,13 @@
-name: day_1
-description: Day 1 solution of AOC 2022.
+name: day_2_rock_paper_scissors
+description: Day 2 solution of AOC 2022.
 version: 1.0.0
 
 environment:
   sdk: '>=2.18.5 <3.0.0'
 
 dependencies:
-   args: 2.3.1
-   equatable: 2.0.5
+  args: 2.3.1
+  equatable: 2.0.5
 
 dev_dependencies:
   lints: ^2.0.1
