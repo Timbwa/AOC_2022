@@ -11,9 +11,6 @@ abstract class PlayerElf {
     this.playerLastRoundResult = PlayerRoundResult.draw,
   });
 
-  /// Decrypts Player Moves by taking the [character] and translates it to the [Move]
-  void makeMove(String character);
-
   Move move;
   bool madeMove;
   int totalScore;

@@ -19,8 +19,8 @@ Future<List<Round>> parseAndConvertToRounds(String filename) async {
 
       final round = Round(number: index++);
 
-      userElf.makeMove(userCharacter);
       opponentElf.makeMove(opponentCharacter);
+      userElf.makeMove(userCharacter, opponentElf.move);
 
       // calculates round result and score
       round.playRound(userElf, opponentElf);

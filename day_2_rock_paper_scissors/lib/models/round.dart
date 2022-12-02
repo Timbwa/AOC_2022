@@ -26,7 +26,7 @@ class Round {
         'OpponentMove: $opponentMove\n'
         'UserElf(You) Score: $userElfScore\n'
         'Opponent Score:     $opponentElfScore\n'
-        'Winning Elf: ${winningElf.runtimeType}\n';
+        'Winning Elf: ${winningElf?.runtimeType ?? 'Draw'}\n';
   }
 
   void playRound(UserElf userElf, OpponentElf opponentElf) {
