@@ -35,7 +35,7 @@ int getPriorityOfCommonItem(String rucksack) {
   final priorities = getPriorities();
   final priority = priorities[commonItem]!;
 
-  print('Common Item: $commonItem, Prioroty: $priority');
+  // print('Common Item: $commonItem, Prioroty: $priority');
   return priority;
 }
 
@@ -49,4 +49,56 @@ Future<List<String>> parseInputToLines(String filename) async {
   }
 
   return lineStrings;
+}
+
+Map<int, Map<int, String>> getGroups(List<String> lines) {
+  Map<int, Map<int, String>> groups = {};
+
+  Map<int, String> groupMap = {};
+
+  var groupIndex = 0;
+  var elfIndex = 0;
+
+  for (var line in lines) {
+    groupMap.addAll({elfIndex++: line});
+
+    if (elfIndex == 3) {
+      groups.addAll(
+        {
+          groupIndex: {...groupMap},
+        },
+      );
+
+      elfIndex = 0;
+      groupIndex++;
+      groupMap.clear();
+    }
+  }
+
+  // print(groups);
+
+  return groups;
+}
+
+int getCommonItemInGroups(Map<int, Map<int, String>> groups) {
+  int sum = 0;
+  final priorities = getPriorities();
+
+  groups.forEach((key, group) {
+    final elves = group.values.toList();
+    final firstElf = elves.first.split('');
+    final secondElf = elves[1].split('');
+    final thirdElf = elves[2].split('');
+
+    for (var item in firstElf) {
+      if (secondElf.contains(item) && thirdElf.contains(item)) {
+        // print('CommonItem for group: $item');
+        sum += priorities[item]!;
+        break;
+      }
+    }
+  });
+
+  print('Sum is $sum');
+  return sum;
 }

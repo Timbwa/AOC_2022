@@ -22,4 +22,7 @@ Future<void> main(List<String> arguments) async {
   }
 
   print(sum);
+
+  final groups = getGroups(lines);
+  getCommonItemInGroups(groups);
 }
