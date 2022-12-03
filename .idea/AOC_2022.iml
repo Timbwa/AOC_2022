@@ -9,6 +9,9 @@
       <excludeFolder url="file://$MODULE_DIR$/day_2_rock_paper_scissors/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/day_2_rock_paper_scissors/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/day_2_rock_paper_scissors/build" />
+      <excludeFolder url="file://$MODULE_DIR$/day_3_rucksack_reorganization/build" />
+      <excludeFolder url="file://$MODULE_DIR$/day_3_rucksack_reorganization/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/day_3_rucksack_reorganization/.dart_tool" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
