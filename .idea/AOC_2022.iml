@@ -12,6 +12,15 @@
       <excludeFolder url="file://$MODULE_DIR$/day_3_rucksack_reorganization/build" />
       <excludeFolder url="file://$MODULE_DIR$/day_3_rucksack_reorganization/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/day_3_rucksack_reorganization/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/day_4/build" />
+      <excludeFolder url="file://$MODULE_DIR$/day_4/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/day_4/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/AdventOfCode-Starter-Dart/build" />
+      <excludeFolder url="file://$MODULE_DIR$/AdventOfCode-Starter-Dart/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/AdventOfCode-Starter-Dart/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/AdventOfCode_2022/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/AdventOfCode_2022/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/AdventOfCode_2022/build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
