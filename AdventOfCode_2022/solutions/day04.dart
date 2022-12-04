@@ -23,7 +23,7 @@ class Day04 extends GenericDay {
     print(lines);
 
     final total = lines.fold<int>(0, (acc, e) {
-      final val = checkIfRangeContainsOther(e) ? 1 : 0;
+      final val = checkForOverlap(e, full: true) ? 1 : 0;
       return acc + val;
     });
 
@@ -35,18 +35,14 @@ class Day04 extends GenericDay {
     final lines = parseInput();
 
     final total = lines.fold<int>(0, (acc, e) {
-      final val = checkForAnyOverlap(e) ? 1 : 0;
+      final val = checkForOverlap(e, full: false) ? 1 : 0;
       return acc + val;
     });
 
     return total;
   }
 
-  bool checkIfRangeContainsOther(Tuple4<int, int, int, int> ids) {
-    return ids.item1 <= ids.item3 && ids.item2 >= ids.item4 || ids.item3 <= ids.item1 && ids.item4 >= ids.item2;
-  }
-
-  bool checkForAnyOverlap(Tuple4<int, int, int, int> ids) {
+  bool checkForOverlap(Tuple4<int, int, int, int> ids, {bool full = false}) {
     final set1 = <int>{};
     final set2 = <int>{};
 
@@ -58,6 +54,13 @@ class Day04 extends GenericDay {
       set2.add(x++);
     }
 
-    return set1.intersection(set2).isNotEmpty;
+    final union = set1.union(set2);
+    final intersection = set1.intersection(set2);
+
+    if (full) {
+      return union.length == set1.length || union.length == set2.length;
+    }
+
+    return intersection.isNotEmpty;
   }
 }
