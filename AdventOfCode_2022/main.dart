@@ -1,9 +1,10 @@
-import 'solutions/day03.dart';
+import 'solutions/index.dart';
 import 'utils/index.dart';
 
 /// List holding all the solution classes.
 final days = <GenericDay>[
   Day03(),
+  Day04(),
 ];
 
 void main(List<String?> args) {
