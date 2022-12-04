@@ -54,13 +54,12 @@ class Day04 extends GenericDay {
       set2.add(x++);
     }
 
-    final union = set1.union(set2);
-    final intersection = set1.intersection(set2);
-
     if (full) {
+      final union = set1.union(set2);
       return union.length == set1.length || union.length == set2.length;
     }
 
+    final intersection = set1.intersection(set2);
     return intersection.isNotEmpty;
   }
 }
