@@ -1,3 +1,5 @@
+All credit to this starter code go to [S-ecki](https://github.com/S-ecki/AdventOfCode-Starter-Dart)
+
 <img src="https://www.kindpng.com/picc/m/176-1766554_dart-programming-language-logo-hd-png-download.png" width="160" align="right">
 
 # AdventOfCode-Starter-Darts
