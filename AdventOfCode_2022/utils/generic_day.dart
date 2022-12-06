@@ -6,9 +6,9 @@ abstract class GenericDay {
   final int day;
   final InputUtil input;
 
-  GenericDay(int day)
+  GenericDay(int day, {InputUtil? inputUtil})
       : day = day,
-        input = InputUtil(day);
+        input = inputUtil ?? InputUtil(day);
 
   dynamic parseInput();
   int solvePart1();
