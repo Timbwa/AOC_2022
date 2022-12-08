@@ -43,6 +43,21 @@ class Day08 extends GenericDay {
     return matrix;
   }
 
+  int getTreeScore(List<int> trees, int treeHeight) {
+    int score = 0;
+
+    for (var tree in trees) {
+      if (tree < treeHeight) {
+        score++;
+      } else {
+        score++;
+        break;
+      }
+    }
+
+    return score;
+  }
+
   @override
   int solvePart1() {
     final matrix = parseInput();
@@ -74,7 +89,7 @@ class Day08 extends GenericDay {
     Map<Tuple2<int, int>, int> treeScores = {};
 
     matrix.forEach((x, y) {
-      final currentPosition = int.parse(matrix.getValueAt(x, y));
+      final currentTreeHeight = int.parse(matrix.getValueAt(x, y));
       final neighbors = matrix.adjacent(x, y);
       int leftScore = 0;
       int topScore = 0;
@@ -88,38 +103,10 @@ class Day08 extends GenericDay {
         final treesToTopEdge = treeNeighbors.item3;
         final treesToBottomEdge = treeNeighbors.item4;
 
-        for (var treeHeight in treesToLeftEdge) {
-          if (treeHeight < currentPosition) {
-            leftScore++;
-          } else {
-            leftScore++;
-            break;
-          }
-        }
-        for (var treeHeight in treesToRightEdge) {
-          if (treeHeight < currentPosition) {
-            rightScore++;
-          } else {
-            rightScore++;
-            break;
-          }
-        }
-        for (var treeHeight in treesToTopEdge) {
-          if (treeHeight < currentPosition) {
-            topScore++;
-          } else {
-            topScore++;
-            break;
-          }
-        }
-        for (var treeHeight in treesToBottomEdge) {
-          if (treeHeight < currentPosition) {
-            bottomScore++;
-          } else {
-            bottomScore++;
-            break;
-          }
-        }
+        leftScore = getTreeScore(treesToLeftEdge, currentTreeHeight);
+        rightScore = getTreeScore(treesToRightEdge, currentTreeHeight);
+        topScore = getTreeScore(treesToTopEdge, currentTreeHeight);
+        bottomScore = getTreeScore(treesToBottomEdge, currentTreeHeight);
 
         final totalScore = leftScore * topScore * rightScore * bottomScore;
         treeScores.addAll({Tuple2(x, y): totalScore});
