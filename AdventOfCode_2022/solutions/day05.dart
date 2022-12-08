@@ -92,6 +92,26 @@ class Day05 extends GenericDay {
       final sourceStack = operation.stacks[move.source - 1];
       final destinationStack = operation.stacks[move.destination - 1];
 
+      for (var x = 0; x < move.amount; x++) {
+        destinationStack.push(sourceStack.pop());
+      }
+    }
+
+    for (var stack in operation.stacks) {
+      print(stack.top());
+    }
+
+    return 0;
+  }
+
+  @override
+  int solvePart2() {
+    final operation = parseInput();
+
+    for (var move in operation.moves) {
+      final sourceStack = operation.stacks[move.source - 1];
+      final destinationStack = operation.stacks[move.destination - 1];
+
       if (move.amount == 1) {
         destinationStack.push(sourceStack.pop());
       } else {
@@ -111,12 +131,6 @@ class Day05 extends GenericDay {
     for (var stack in operation.stacks) {
       print(stack.top());
     }
-
-    return 0;
-  }
-
-  @override
-  int solvePart2() {
     return 0;
   }
 }
