@@ -10,8 +10,6 @@ class Knot {
     return 'Knot{position: $position}';
   }
 
-  void setPosition(Position position) => this.position = position;
-
   void moveUp([int step = 1]) {
     position = position.withItem2(position.y - step);
   }
@@ -105,17 +103,7 @@ class Knot {
 }
 
 class Head extends Knot {
-  Head(super.position) : tail = Tail(position);
-
-  final Tail tail;
-
-  void resolveTailPosition() {
-    resolvePositionOfKnotPair(this, tail);
-  }
-}
-
-class HeadWithMultipleTails extends Head {
-  HeadWithMultipleTails(super.position) : tails = List.generate(9, (index) => Tail(position));
+  Head(super.position, {int numberOfTails = 9}) : tails = List.generate(numberOfTails, (index) => Tail(position));
   List<Tail> tails;
 
   void resolveTailPositions() {
@@ -152,7 +140,7 @@ class Day09 extends GenericDay {
   int solvePart1() {
     final headSteps = parseInput();
 
-    final head = Head(Tuple2(0, 0));
+    final head = Head(Tuple2(0, 0), numberOfTails: 1);
 
     Set<Position> tailPositions = {};
 
@@ -163,29 +151,29 @@ class Day09 extends GenericDay {
       if (move == 'R') {
         for (var step = 0; step < steps;) {
           head.moveRight();
-          head.resolveTailPosition();
-          tailPositions.add(head.tail.position);
+          head.resolveTailPositions();
+          tailPositions.add(head.tails.last.position);
           step++;
         }
       } else if (move == 'L') {
         for (var step = 0; step < steps;) {
           head.moveLeft();
-          head.resolveTailPosition();
-          tailPositions.add(head.tail.position);
+          head.resolveTailPositions();
+          tailPositions.add(head.tails.last.position);
           step++;
         }
       } else if (move == 'U') {
         for (var step = 0; step < steps;) {
           head.moveUp();
-          head.resolveTailPosition();
-          tailPositions.add(head.tail.position);
+          head.resolveTailPositions();
+          tailPositions.add(head.tails.last.position);
           step++;
         }
       } else if (move == 'D') {
         for (var step = 0; step < steps;) {
           head.moveDown();
-          head.resolveTailPosition();
-          tailPositions.add(head.tail.position);
+          head.resolveTailPositions();
+          tailPositions.add(head.tails.last.position);
           step++;
         }
       }
@@ -198,7 +186,7 @@ class Day09 extends GenericDay {
   int solvePart2() {
     final headSteps = parseInput();
 
-    final head = HeadWithMultipleTails(Tuple2(0, 0));
+    final head = Head(Tuple2(0, 0));
 
     Set<Position> tailPositions = {};
 
