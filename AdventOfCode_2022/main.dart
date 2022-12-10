@@ -1,3 +1,4 @@
+import 'solutions/day10.dart';
 import 'solutions/index.dart';
 import 'utils/index.dart';
 
@@ -12,6 +13,7 @@ final days = <GenericDay>[
   Day07(),
   Day08(),
   Day09(),
+  Day10(),
 ];
 
 void main(List<String?> args) {

@@ -1,5 +1,114 @@
 import '../utils/index.dart';
 
+typedef Register = int;
+typedef Instructions = List<String>;
+typedef Instruction = String;
+
+class CRT {
+  CRT();
+
+  int crtPosition = 0;
+  int crtRowIndex = 0;
+  String crtOutput = '';
+  Map<int, String> rows = {};
+
+  void updateOutput(Register x) {
+    final spriteRange = <int>[x - 1, x, x + 1];
+
+    if (crtOutput.length % 40 == 0) {
+      crtOutput = '';
+      crtRowIndex = 0;
+    }
+    if (spriteRange.contains(crtRowIndex)) {
+      crtOutput = '$crtOutput#';
+      rows[crtPosition ~/ 40] = crtOutput;
+    } else {
+      crtOutput = '$crtOutput ';
+      rows[crtPosition ~/ 40] = crtOutput;
+    }
+
+    crtPosition++;
+    crtRowIndex++;
+  }
+
+  void display() {
+    rows.forEach((key, value) {
+      print(value);
+    });
+  }
+}
+
+class CPU {
+  CPU(
+    this.totalCycles,
+    this.instructions, {
+    this.crt,
+  });
+
+  Register x = 1;
+  int totalCycles;
+  int cycleCount = 0;
+  int instructionIndex = 0;
+  Instructions instructions;
+  CRT? crt;
+
+  Map<int, int> cycleValues = {
+    20: 0,
+    60: 0,
+    100: 0,
+    140: 0,
+    180: 0,
+    220: 0,
+  };
+
+  Map<String, int> instructionCycleCount = {};
+
+  void executeInstructions() {
+    int cycleCount = 0;
+
+    while ((cycleCount < totalCycles) && (instructionIndex < instructions.length)) {
+      final instruction = instructions[instructionIndex].split(' ');
+
+      crt?.updateOutput(x);
+
+      if (instruction.length == 1) {
+        noop();
+      } else {
+        if (!instructionCycleCount.containsKey('${instructionIndex}_${instruction}')) {
+          instructionCycleCount['${instructionIndex}_$instruction'] = 1;
+          addx(isFirstCycle: true);
+        } else {
+          instructionCycleCount['${instructionIndex}_$instruction'] = 2;
+          final value = int.parse(instruction[1]);
+          addx(isFirstCycle: false, value: value);
+        }
+      }
+      updateCycleValuesOfInterest();
+    }
+  }
+
+  void noop() {
+    instructionIndex++;
+    cycleCount++;
+  }
+
+  void addx({bool isFirstCycle = true, int value = 0}) {
+    if (!isFirstCycle) {
+      x += value;
+      instructionIndex++;
+    }
+    cycleCount++;
+  }
+
+  void updateCycleValuesOfInterest() {
+    if (cycleValues.containsKey(cycleCount + 1)) {
+      cycleValues[cycleCount + 1] = (cycleCount + 1) * x;
+    }
+  }
+
+  int get cycleValuesTotal => cycleValues.values.fold(0, (previousValue, element) => previousValue + element);
+}
+
 class Day10 extends GenericDay {
   Day10() : super(10);
 
@@ -20,45 +129,10 @@ class Day10 extends GenericDay {
       return acc + 2;
     });
 
-    int cycleCount = 0;
-    int x = 1;
-    int instructionIndex = 0;
-    Map<String, int> instructionCycleCount = {};
-    Map<int, int> cycleValues = {
-      20: 0,
-      60: 0,
-      100: 0,
-      140: 0,
-      180: 0,
-      220: 0,
-    };
+    final cpu = CPU(totalCycles, instructions);
+    cpu.executeInstructions();
 
-    int total = 0;
-
-    while (cycleCount < totalCycles) {
-      final instruction = instructions[instructionIndex].split(' ');
-      if (instruction.length == 1) {
-        instructionIndex++;
-        cycleCount++;
-      } else {
-        if (!instructionCycleCount.containsKey('${instructionIndex}_${instruction}')) {
-          instructionCycleCount['${instructionIndex}_$instruction'] = 1;
-          cycleCount++;
-        } else {
-          instructionCycleCount['${instructionIndex}_$instruction'] = 2;
-          x += int.parse(instruction[1]);
-          instructionIndex++;
-          cycleCount++;
-        }
-      }
-
-      if (cycleValues.containsKey(cycleCount + 1)) {
-        cycleValues[cycleCount + 1] = (cycleCount + 1) * x;
-      }
-    }
-
-    total = cycleValues.values.fold(0, (previousValue, element) => previousValue + element);
-    return total;
+    return cpu.cycleValuesTotal;
   }
 
   @override
@@ -72,54 +146,11 @@ class Day10 extends GenericDay {
       return acc + 2;
     });
 
-    int cycleCount = 0;
-    int x = 1;
-    int instructionIndex = 0;
-    int crtPosition = 0;
-    int crtRowIndex = 0;
-    String crtOutput = '';
+    final crt = CRT();
+    final cpu = CPU(totalCycles, instructions, crt: crt);
 
-    Map<String, int> instructionCycleCount = {};
-    Map<int, String> rows = {};
-
-    while (cycleCount < totalCycles) {
-      final instruction = instructions[instructionIndex].split(' ');
-      final spriteRange = <int>[x - 1, x, x + 1];
-
-      if (crtOutput.length % 40 == 0) {
-        crtOutput = '';
-        crtRowIndex = 0;
-      }
-      if (spriteRange.contains(crtRowIndex)) {
-        crtOutput = '$crtOutput#';
-        rows[crtPosition ~/ 40] = crtOutput;
-      } else {
-        crtOutput = '$crtOutput.';
-        rows[crtPosition ~/ 40] = crtOutput;
-      }
-
-      crtPosition++;
-      crtRowIndex++;
-
-      if (instruction.length == 1) {
-        instructionIndex++;
-        cycleCount++;
-      } else {
-        if (!instructionCycleCount.containsKey('${instructionIndex}_${instruction}')) {
-          instructionCycleCount['${instructionIndex}_$instruction'] = 1;
-          cycleCount++;
-        } else {
-          instructionCycleCount['${instructionIndex}_$instruction'] = 2;
-          x += int.parse(instruction[1]);
-          instructionIndex++;
-          cycleCount++;
-        }
-      }
-    }
-
-    rows.forEach((key, value) {
-      print(value);
-    });
+    cpu.executeInstructions();
+    crt.display();
 
     return 0;
   }
