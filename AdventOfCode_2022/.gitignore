@@ -1,3 +1,4 @@
 .dart-tool/
 .dart_tool/package_config.json
 .packages
+/input/aoc[0-2][0-9].txt
