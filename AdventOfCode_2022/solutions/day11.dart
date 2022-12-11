@@ -191,10 +191,6 @@ class Day11 extends GenericDay {
       for (var monkey in monkeys) {
         monkey.inspectItems(monkeys, areRelieved: false, lcm: lcmOfDivisors);
       }
-      if (i == 1 || i == 20 || i % 1000 == 0) {
-        print('\n== After round $i ==');
-        monkeys.forEach(print);
-      }
     }
 
     monkeys.sort();
