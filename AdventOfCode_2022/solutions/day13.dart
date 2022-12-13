@@ -70,7 +70,6 @@ class Day13 extends GenericDay {
       });
     });
 
-    print(allPackets);
     final packet2 = [
       [2]
     ];
@@ -86,6 +85,14 @@ class Day13 extends GenericDay {
         countOfPacketsBefore6 += 1;
       }
     }
+
+    // alternate solution
+    allPackets.addAll([packet2, packet6]);
+    allPackets.sort(compareList);
+    final altNumOfPacketsBefore2 = allPackets.indexOf(packet2) + 1;
+    final altNumOfPacketsBefore6 = allPackets.indexOf(packet6) + 1;
+
+    print('Answer from alt solution : ${altNumOfPacketsBefore2 * altNumOfPacketsBefore6}');
     return countOfPacketsBefore2 * countOfPacketsBefore6;
   }
 }
