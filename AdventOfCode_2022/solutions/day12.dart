@@ -4,11 +4,11 @@ import '../utils/index.dart';
 
 const MAX_COST = 999999999999;
 
-class Node extends Equatable implements Comparable<Node> {
+class Node extends Equatable {
   Node({
     this.parentNode,
     this.gCost = MAX_COST,
-    this.hCost = 0,
+    this.distance = 0,
     required this.character,
   });
 
@@ -18,7 +18,7 @@ class Node extends Equatable implements Comparable<Node> {
   int gCost;
 
   /// Heuristic Cost [ManhattanDistance]
-  int hCost;
+  int distance;
   String character;
   Node? parentNode;
   late Position position;
@@ -26,26 +26,19 @@ class Node extends Equatable implements Comparable<Node> {
   @override
   List<Object?> get props => [position];
 
-  int get totalCost => gCost + hCost;
-  int get height => character == 'E' ? 'z'.codeUnitAt(0) - 96 : character.codeUnitAt(0) - 96;
+  int get x => position.x;
 
-  bool get isGoalNode => character == 'E' && (parentNode != null && parentNode!.character == 'z');
+  int get y => position.y;
+
+  int get height => character.codeUnitAt(0);
 
   @override
   String toString() {
-    return '[$character] $position (${hCost})|';
-  }
-
-  @override
-  int compareTo(Node other) {
-    return totalCost.compareTo(other.totalCost);
+    return '[$character] $position ($distance)|';
   }
 
   int characterDistance(Node other) {
-    if (character == 'S' || (other.character == 'E' && this.character == 'z')) {
-      return 1;
-    }
-    return (height - other.height).abs();
+    return (height - other.height);
   }
 }
 
@@ -69,85 +62,61 @@ class Day12 extends GenericDay {
     return heightMap;
   }
 
+  int findShortestPathBFS(Node startNode, Node goalNode, Field<Node> heightMap, {bool p1 = true}) {
+    final visitedNodes = <Node>{};
+    final queue = QueueList<Node>();
+
+    queue.add(startNode);
+    visitedNodes.add(startNode);
+
+    while (queue.isNotEmpty) {
+      final currentNode = queue.removeFirst();
+      final neighbors = heightMap.adjacent(currentNode.x, currentNode.y);
+      for (var neighbor in neighbors) {
+        final neighborNode = heightMap.getValueAtPosition(neighbor);
+        if (visitedNodes.contains(neighborNode)) {
+          continue;
+        }
+        if (((neighborNode.characterDistance(currentNode) > 1) && p1) ||
+            ((neighborNode.characterDistance(currentNode) < -1) && !p1)) {
+          continue;
+        }
+        if (((neighborNode == goalNode) && p1) || ((neighborNode.character == 'a') && !p1)) {
+          return currentNode.distance + 1;
+        }
+        neighborNode.distance = currentNode.distance + 1;
+        visitedNodes.add(neighborNode);
+        queue.addLast(neighborNode);
+      }
+    }
+
+    throw Exception('No path found');
+  }
+
   @override
   int solvePart1() {
     final heightMap = parseInput();
 
     final goalNode = heightMap.getValueBy((element) => element.character == 'E');
     final startNode = heightMap.getValueBy((element) => element.character == 'S');
+    goalNode.character = 'z';
+    startNode.character = 'a';
 
-    print(heightMap);
-    final val = solveAStar(heightMap, startNode, goalNode);
-    reconstructPath(startNode, goalNode);
-    print(heightMap);
-    return val;
-  }
+    final shortestPathDistance = findShortestPathBFS(startNode, goalNode, heightMap);
 
-  int manhattanHeuristic(Node startNode, Node endNode) {
-    return (startNode.position.x - endNode.position.x).abs() + (startNode.position.y - endNode.position.y).abs();
-  }
-
-  void reconstructPath(Node startNode, Node goalNode) {
-    final totalPath = QueueList<Node?>();
-    totalPath.addLast(goalNode);
-    Node? currentNode = goalNode.parentNode;
-    while (currentNode?.parentNode != null) {
-      totalPath.addFirst(currentNode);
-      currentNode = currentNode?.parentNode;
-    }
-    totalPath.addFirst(currentNode);
-    print(totalPath);
-    print(totalPath.length);
-  }
-
-  int solveAStar(Field<Node> heightMap, Node startNode, Node goalNode) {
-    /// Path
-    List<Tuple3<Node, Node, int>> path = [];
-
-    /// visited nodes
-    List<Node> closedSet = [];
-    HeapPriorityQueue<Node> fringe = HeapPriorityQueue<Node>();
-
-    startNode.gCost = 0;
-    startNode.hCost = manhattanHeuristic(startNode, goalNode);
-
-    fringe.add(startNode);
-
-    while (fringe.isNotEmpty) {
-      final currentVertex = fringe.removeFirst();
-      closedSet.add(currentVertex);
-
-      if (currentVertex.isGoalNode) {
-        print('Reached Goal');
-        path.add(Tuple3(startNode, goalNode, goalNode.gCost));
-        return goalNode.gCost;
-      }
-
-      final neighborPositions = heightMap.adjacent(currentVertex.position.x, currentVertex.position.y);
-      for (var neighborPosition in neighborPositions) {
-        final neighbor = heightMap.getValueAtPosition(neighborPosition);
-
-        if (!closedSet.contains(neighbor)) {
-          final tempGCost = currentVertex.gCost + 1;
-          if (tempGCost < neighbor.gCost &&
-              ((currentVertex.characterDistance(neighbor) <= 1) || (neighbor.height <= currentVertex.height))) {
-            neighbor.parentNode = currentVertex;
-            neighbor.gCost = tempGCost;
-            neighbor.hCost = manhattanHeuristic(neighbor, goalNode);
-
-            if (!fringe.contains(neighbor)) {
-              fringe.add(neighbor);
-            }
-          }
-        }
-      }
-    }
-
-    throw Exception("No solution");
+    return shortestPathDistance;
   }
 
   @override
   int solvePart2() {
-    return 0;
+    final heightMap = parseInput();
+
+    final goalNode = heightMap.getValueBy((element) => element.character == 'E');
+    final startNode = heightMap.getValueBy((element) => element.character == 'S');
+    goalNode.character = 'z';
+    startNode.character = 'a';
+
+    // starting from goal node backwards
+    return findShortestPathBFS(goalNode, startNode, heightMap, p1: false);
   }
 }

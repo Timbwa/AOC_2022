@@ -128,6 +128,19 @@ class Field<T> {
     throw Exception('Element not found by callback');
   }
 
+  List<T> getValuesBy(bool Function(T element) callback) {
+    final validElements = <T>[];
+    for (final row in field) {
+      for (final elem in row) {
+        if (callback(elem)) {
+          validElements.add(elem);
+        }
+      }
+    }
+
+    return validElements;
+  }
+
   @override
   String toString() {
     String result = '';
